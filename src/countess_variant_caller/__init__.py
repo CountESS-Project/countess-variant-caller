@@ -58,14 +58,6 @@ def search_for_sequence(ref_seq: str, var_seq: str, min_search_length: int = MIN
     'CAT'
     """
 
-    # XXX this could be extended to allow for inverted insertions like `850_900inv`,
-    # repeated insertions like `A[26]` and/or complex insertion formats such as
-    # `T;450_470;AGGG` but actually finding that kind of match is not simple.
-
-    # XXX consider using something like re.match(r"(.+?)\1+$", var_seq) to search
-    # for repeated sequences, but check that it doesn't go O(N!) or whatever
-    # (so far on cpython 3.10 this seems fine)
-
     if len(var_seq) < min_search_length:
         return var_seq
 
@@ -254,12 +246,6 @@ def find_variant_dna(ref_seq: str, var_seq: str, offset: int = 0) -> Iterable[st
     # then we can reduce the complexity of the output by
     # swapping them and merging the two inserts.
     #
-    # XXX can do something similar to turn aligned replace/equal/replace
-    # sequences into a single whole-codon replace (delins) as per
-    # https://varnomen.hgvs.org/recommendations/DNA/variant/substitution/
-    # "two variants separated by one nucleotide, together affecting one
-    # amino acid, should be described as a “delins”"
-    #
     # example: find_variant_string("c.", "ATGTACAAA", "ATGGATAAA")
     # before: "c.[4T>G;6C>T]"
     # after: "c.[4_6delinsGAT]"
@@ -307,10 +293,6 @@ def find_variant_dna(ref_seq: str, var_seq: str, offset: int = 0) -> Iterable[st
         elif opcode.tag == "replace":
             # 'replace' opcode maps to either an HGVS '>' (single substitution) or
             # 'inv' (inversion) or 'delins' (delete+insert) operation.
-
-            # XXX does not support "exception: two variants separated by one nucleotide,
-            # together affecting one amino acid, should be described as a “delins”",
-            # as this code has no concept of amino acid alignment.
 
             if len(src_seq) == 1 and len(dest_seq) == 1:
                 yield f"{abs(start+1)}{src_seq}>{dest_seq}"
@@ -447,10 +429,7 @@ def find_variant_protein(ref_seq: str, var_seq: str, offset: int = 0):
                 yield f"{_ref(start-1)}ext{translate_aa(dest_pro)}"
             else:
                 yield f"{_ref(start-1)}_{_ref(end)}ins{translate_aa(dest_pro)}"
-
         elif opcode.tag == "replace":
-            # XXX handle extension if src_pro[-1] == '*'
-
             if end - start == 1 and len(dest_pro) == 1:
                 yield f"{_ref(start)}{translate_aa(dest_pro)}"
             else:

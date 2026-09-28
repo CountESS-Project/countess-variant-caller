@@ -39,7 +39,6 @@ readme = { file = "README.md", content-type="text/markdown" }
 [tool.pylint]
 max-line-length = 120
 disable = [
-    "fixme",
     "too-many-branches",
     "too-many-locals",
     "too-many-statements",
