@@ -1,8 +1,6 @@
-""" Helper functions which find HGVS variants from sequences """
+""" countess_variant_caller library
 
-# XXX this should probably become part of MAVE-HGVS library
-# https://github.com/VariantEffect/mavehgvs since it is more
-# generally applicable than just CountESS!
+Efficiently call HGVS variants from DNA sequences"""
 
 import re
 from typing import Iterable, Optional
@@ -12,7 +10,7 @@ from fqfa.util.nucleotide import reverse_complement  # type: ignore
 from fqfa.util.translate import translate_dna  # type: ignore
 from rapidfuzz.distance.Levenshtein import opcodes as levenshtein_opcodes
 
-VERSION = '0.0.1'
+VERSION = "0.1.0"
 
 # Insertions shorter than this won't be searched for, just included.
 MIN_SEARCH_LENGTH = 10
@@ -553,7 +551,7 @@ def find_variant_string(
     >>> find_variant_string("g.", "ATTACC", "GATTACA",1)
     Traceback (most recent call last):
      ...
-    countess.utils.variant.TooManyVariationsException: Too many variations (2) in GATTACA
+    countess_variant_caller.TooManyVariationsException: Too many variations (2) in GATTACA
     """
 
     if minus_strand:
