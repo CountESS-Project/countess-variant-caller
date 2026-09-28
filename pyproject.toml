@@ -1,0 +1,34 @@
+[project]
+name = 'countess-variant-caller'
+dynamic = ["version"]
+readme = "README.md"
+authors = [
+    { name = "Nick Moore", email="nick@zoic.org" },
+]
+maintainers = [
+    { name = "Nick Moore", email="nick@zoic.org" },
+]
+description = "An efficient HGVS variant caller"
+requires-python = ">=3.10"
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Intended Audience :: Science/Research',
+    'Operating System :: OS Independent',
+    'Topic :: Scientific/Engineering :: Bio-Informatics',
+]
+dependencies = [
+    'fqfa~=1.3.1',
+    'rapidfuzz~=3.14.5',
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "countess_variant_caller.VERSION" }
+readme = { file = "README.md", content-type="text/markdown" }
+
+[tool.pylint]
+max-line-length = 120
+
+[tool.black]
+line-length = 120
+
+
