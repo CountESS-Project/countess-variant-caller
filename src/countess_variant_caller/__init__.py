@@ -17,7 +17,8 @@ MIN_SEARCH_LENGTH = 10
 
 
 class TooManyVariationsException(ValueError):
-    pass
+    """Exception thrown when the number of variations found
+    exceeds the limit"""
 
 
 def translate_aa(aa_seq: str) -> str:
@@ -567,7 +568,7 @@ def find_variant_string(
         return prefix + "="
 
     if max_mutations is not None and len(variations) > max_mutations:
-        raise TooManyVariationsException("Too many variations (%d) in %s" % (len(variations), var_seq))
+        raise TooManyVariationsException(f"Too many variations ({len(variations)}) in {var_seq}")
 
     if len(variations) == 1:
         return prefix + variations[0]

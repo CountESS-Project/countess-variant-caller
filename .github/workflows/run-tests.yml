@@ -1,0 +1,19 @@
+name: Run Tests
+on:
+  push:
+
+jobs:
+  everything:
+    runs-on: ubuntu-latest
+    name: 
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.13'
+    - run: pip install .[dev]
+    - run: mypy src
+    - run: pylint src
+    - run: pytest
+
+
