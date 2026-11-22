@@ -165,26 +165,10 @@ def find_variant_dna(ref_seq: str, var_seq: str, offset: int = 0) -> Iterable[st
         "GGCATCATCATCATGGCATCATCATCATGGCATCATCATCATGGCATCATCATCATGG"))
     ['30_31ins33_44']
 
-    (example from Q&A on https://varnomen.hgvs.org/recommendations/DNA/variant/insertion/ )
-    "How should I describe the change ATCGATCGATCGATCGAGGGTCCC to
-    ATCGATCGATCGATCGAATCGATCGATCGGGTCCC? The fact that the inserted sequence
-    (ATCGATCGATCG) is present in the original sequence suggests it derives
-    from a duplicative event."
-    "The variant should be described as an insertion; g.17_18ins5_16."
-
-            0        1         2         3
-            1234567890123456789012345678901234
-            ATCGATCGATCGATCGAGGGTCCC
-            ATCGATCGATCGATCGAATCGATCGATCGGGTCCC
-                ^^^^^^^^^^^  ^^^^^^^^^^^
-
-    right so the duplicated part is 5_15 and its inserted between 17 and 18.
-    I think the example in the Q&A is wrong.
-
     >>> list(find_variant_dna(\
         "ATCGATCGATCGATCGAGGGTCCC", \
-        "ATCGATCGATCGATCGAATCGATCGATCGGGTCCC"))
-    ['17_18ins5_15']
+        "ATCGATCGATCGATCGAATCGATCGATCGGGGTCCC"))
+    ['17_18ins5_16']
 
     >>> list(find_variant_dna("AAAAAAAAAACCCGGGGGGGGGGTTT", "AAAAAAAAAACCCAAAAAAAAAATTT"))
     ['14_23delins1_10']
