@@ -2,19 +2,25 @@
 
 Efficiently call HGVS variants from DNA sequences"""
 
+from functools import lru_cache
 import re
 from typing import Iterable, Optional
 
 from fqfa.constants.iupac.protein import AA_CODES  # type: ignore
 from fqfa.util.nucleotide import reverse_complement  # type: ignore
-from fqfa.util.translate import translate_dna  # type: ignore
+from fqfa.util.translate import translate_dna as _translate_dna  # type: ignore
 from rapidfuzz.distance.Levenshtein import opcodes as levenshtein_opcodes
 
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 
 # Insertions shorter than this won't be searched for, just included.
 MIN_SEARCH_LENGTH = 10
 
+
+@lru_cache(maxsize=1000)
+def translate_dna(dna: str) -> str:
+    """Wrap fqfa's translate_dna so it can be cached."""
+    return _translate_dna(dna)[0]
 
 class TooManyVariationsException(ValueError):
     """Exception thrown when the number of variations found
@@ -369,8 +375,8 @@ def find_variant_protein(ref_seq: str, var_seq: str, offset: int = 0):
         raise ValueError("Invalid variant sequence")  # pragma: no cover
 
     frame = (3 - offset) % 3
-    ref_pro = translate_dna(ref_seq[frame:])[0]
-    var_pro = translate_dna(var_seq[frame:])[0]
+    ref_pro = translate_dna(ref_seq[frame:])
+    var_pro = translate_dna(var_seq[frame:])
     offset = (offset + 2) // 3
 
     # cut protein translations off at first '*' (terminator)
