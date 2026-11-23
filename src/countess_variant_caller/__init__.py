@@ -11,7 +11,7 @@ from fqfa.util.nucleotide import reverse_complement  # type: ignore
 from fqfa.util.translate import translate_dna as _translate_dna  # type: ignore
 from rapidfuzz.distance.Levenshtein import opcodes as levenshtein_opcodes
 
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 
 # Insertions shorter than this won't be searched for, just included.
 MIN_SEARCH_LENGTH = 10
