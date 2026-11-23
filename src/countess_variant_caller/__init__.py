@@ -433,18 +433,21 @@ def find_variant_protein(ref_seq: str, var_seq: str, offset: int = 0):
             # Handle calling synonymous changes
             assert end - start == opcode.dest_end - opcode.dest_start
             start_ofs = None
-            for ofs in range(0, end - start):
-                src_dna = ref_seq[(start + ofs) * 3 + frame :][:3]
-                dest_dna = var_seq[(opcode.dest_start + ofs) * 3 + frame :][:3]
-                if src_dna == dest_dna:
-                    if start_ofs is not None:
-                        if start_ofs == ofs - 1:
-                            yield f"{_ref(start+start_ofs)}="
-                        else:
-                            yield f"{_ref(start+start_ofs)}_{_ref(start+ofs-1)}="
-                        start_ofs = None
-                elif start_ofs is None:
-                    start_ofs = ofs
+            src_dna_run = ref_seq[start * 3 + frame : end * 3 + frame]
+            dest_dna_run = var_seq[opcode.dest_start * 3 + frame : opcode.dest_end * 3 + frame]
+            if src_dna_run != dest_dna_run:
+                for ofs in range(0, end - start):
+                    src_dna = src_dna_run[ofs * 3 : ofs * 3 + 3]
+                    dest_dna = dest_dna_run[ofs * 3 : ofs * 3 + 3]
+                    if src_dna == dest_dna:
+                        if start_ofs is not None:
+                            if start_ofs == ofs - 1:
+                                yield f"{_ref(start+start_ofs)}="
+                            else:
+                                yield f"{_ref(start+start_ofs)}_{_ref(start+ofs-1)}="
+                            start_ofs = None
+                    elif start_ofs is None:
+                        start_ofs = ofs
             if start_ofs is not None:
                 if start_ofs == ofs:
                     yield f"{_ref(start+start_ofs)}="
